@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Cleanup script for icaclient removal
+#
+
+case "${ACTION}" in
+post)
+    # Remove runit service symlink if it exists
+    if [ -L /var/service/ctxcwalogd ]; then
+        echo "Removing ctxcwalogd service..."
+        rm -f /var/service/ctxcwalogd
+    fi
+
+    # Note: We don't remove the citrixlog user automatically as it may own files
+    # If you want to remove it manually, run:
+    #   userdel citrixlog
+    #   rm -rf /var/log/citrix
+
+    echo "Citrix Workspace app has been removed."
+    echo ""
+    echo "Note: The 'citrixlog' system user and /var/log/citrix were kept."
+    echo "To remove them manually:"
+    echo "  sudo userdel citrixlog"
+    echo "  sudo rm -rf /var/log/citrix"
+    ;;
+esac

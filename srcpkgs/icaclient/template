@@ -1,0 +1,80 @@
+# Template file for 'icaclient'
+pkgname=icaclient
+version=25.08.0.88
+revision=1
+archs="x86_64"
+create_wrksrc=yes
+hostmakedepends="binutils tar xz"
+depends="gtk+ libwebkit2gtk41 glib alsa-lib libXmu libXpm libXext libSM libICE
+ libidn2 libcurl sqlite speexdsp libva net-tools pulseaudio
+ gst-libav gst-plugins-bad1 libstdc++ mit-krb5-libs gstreamer1 gst-plugins-base1
+ libsane libpcsclite libsecret nspr nss dbus-libs at-spi2-atk at-spi2-core
+ libcups libinput eudev-libudev libgbm"
+short_desc="Citrix Workspace app for Linux"
+maintainer="Jingkai Tan <contact@jingk.ai>"
+license="custom:Citrix"
+homepage="https://www.citrix.com"
+repository=nonfree
+restricted=yes
+nopie=yes
+nostrip=yes
+# Citrix bundles many libraries (old webkit, gstreamer 0.10, etc.)
+# Skip automatic shlib dependency detection
+noverifyrdeps=yes
+
+system_accounts="citrixlog"
+citrixlog_homedir="/var/log/citrix"
+citrixlog_shell="/bin/nologin"
+
+do_extract() {
+	# Extract the .deb file from the sources directory
+	mkdir -p ${wrksrc}
+	ar x ${XBPS_SRCDISTDIR}/${pkgname}-${version}/icaclient_${version}_amd64.deb --output=${wrksrc}
+	cd ${wrksrc}
+	tar -xf control.tar.xz
+	tar -xf data.tar.xz
+}
+
+post_extract() {
+	# Remove systemd service files as Void uses runit
+	rm -rf ${wrksrc}/lib/systemd
+
+	# We'll handle the init.d script separately
+	vmkdir etc/sv/ctxcwalogd
+}
+
+do_install() {
+	# Install the main application
+	vcopy opt /
+
+	# Install desktop files
+	vcopy usr/share/applications /usr/share
+
+	# Install documentation
+	vcopy usr/share/doc /usr/share
+
+	# Create log directory
+	vmkdir var/log/citrix 0755
+
+	# Install the configuration files
+	vcopy etc/icaclient /etc
+
+	# Create runit service for ctxcwalogd instead of systemd
+	cat > ${DESTDIR}/etc/sv/ctxcwalogd/run << 'EOF'
+#!/bin/sh
+exec 2>&1
+[ -r ./conf ] && . ./conf
+exec chpst -u citrixlog /opt/Citrix/ICAClient/util/ctxcwalogd
+EOF
+	chmod 0755 ${DESTDIR}/etc/sv/ctxcwalogd/run
+
+	# Install license
+	vlicense ${wrksrc}/usr/share/doc/icaclient/copyright
+}
+
+post_install() {
+	# The postinst script does a lot of setup, but most of it is handled
+	# by the package manager or is systemd-specific
+	# Users will need to run /opt/Citrix/ICAClient/util/setlog manually if needed
+	:
+}

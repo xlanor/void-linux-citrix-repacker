@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Post-installation script for icaclient
+#
+
+case "${ACTION}" in
+post)
+    # Enable the Citrix log daemon service automatically
+    if [ ! -e /var/service/ctxcwalogd ]; then
+        echo "Enabling ctxcwalogd service..."
+        ln -s /etc/sv/ctxcwalogd /var/service/
+    fi
+
+    echo ""
+    echo "Citrix Workspace app has been installed."
+    echo "The ctxcwalogd logging service has been enabled and started."
+    ;;
+esac
