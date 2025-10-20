@@ -43,4 +43,4 @@ Current template: **25.08.0.88**
 
 To build a different version, just run the build script with the new `.deb` file - it auto-detects the version.
 
-This packaging is provided for convenience following Void Linux packaging standards.
+This packaging is provided for convenience following Void Linux packaging standards. The deb package needs to be downloaded from [Citrix's website](https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html).
