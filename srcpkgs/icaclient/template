@@ -1,12 +1,12 @@
 # Template file for 'icaclient'
 pkgname=icaclient
 version=25.08.0.88
-revision=1
+revision=2
 archs="x86_64"
 create_wrksrc=yes
 hostmakedepends="binutils tar xz"
 depends="gtk+ libwebkit2gtk41 glib alsa-lib libXmu libXpm libXext libSM libICE
- libidn2 libcurl sqlite speexdsp libva net-tools pulseaudio
+ libidn2 libcurl sqlite speexdsp libva net-tools pipewire-pulse
  gst-libav gst-plugins-bad1 libstdc++ mit-krb5-libs gstreamer1 gst-plugins-base1
  libsane libpcsclite libsecret nspr nss dbus-libs at-spi2-atk at-spi2-core
  libcups libinput eudev-libudev libgbm"
