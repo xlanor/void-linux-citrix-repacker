@@ -13,7 +13,6 @@ Build Citrix Workspace app (ICA Client) packages for Void Linux from official Ci
 
 2. **Citrix ICA Client .deb file**
    Download from: https://www.citrix.com/downloads/workspace-app/linux/
-   (Requires free Citrix account)
 
 3. **Enable restricted packages** (if not already done):
    ```bash
